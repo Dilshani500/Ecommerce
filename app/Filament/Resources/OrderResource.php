@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
+use App\Filament\Resources\OrderResource\RelationManagers\AddressRelationManager;
 use App\Models\Order;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,6 +27,15 @@ use App\Models\Product;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+
+
 
 
 
@@ -210,25 +220,49 @@ class OrderResource extends Resource
                 TextColumn::make('payment_status')
                   ->searchable()
                   ->sortable(),
+
+                TextColumn::make('currency')
+                  ->searchable()
+                  ->sortable(),
+
+                 TextColumn::make('shipping_method')
+                  ->searchable()
+                  ->sortable(),
                 
-                 TextColumn::make('status')
-                   ->options([
-                        'new'=>'New',
-                         'processing'=>'Processing',
-                         'shipped'=>'Shipped',
-                         'delivered'=>'Delivered',
-                          'cancelled'=>'Cancelled',
-                   ])
-                   ->searchable()
-                   ->sortable()
+                
+                SelectColumn::make('status')
+                ->options([
+                    'new' => 'New',
+                    'processing' => 'Processing',
+                    'shipped' => 'Shipped',
+                    'delivered' => 'Delivered',
+                    'cancelled' => 'Cancelled',
+                ])
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(true),
+
+                TextColumn::make('Updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(true),
+
+               
                 
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make()
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -240,8 +274,16 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AddressRelationManager::class
         ];
+    }
+
+    public static function getNavigationBadge(): ?string{
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor():String|array|null{
+        return static::getModel()::count() > 10 ? 'success':'danger';
     }
 
     public static function getPages(): array
