@@ -23,13 +23,27 @@ class ProductPage extends Component
 
 
    
-     #[Url]
+    #[Url]
 
     public $selected_categories = [];
 
-     #[Url]
+    #[Url]
 
     public $selected_brands = [];
+
+    #[Url]
+
+    public $featured;
+
+
+    #[Url]
+
+    public $on_sale;
+
+    #[Url]
+
+    public $price_range = 300000;
+
     public function render()
     {
         $productQuery = Product::query()->where('is_active',1);
@@ -41,6 +55,18 @@ class ProductPage extends Component
         
         if(!empty($this->selected_brands)){
             $productQuery->whereIn('brand_id', $this->selected_brands);
+        }
+
+        if($this->featured){
+            $productQuery->where('is_featured', 1);
+        }
+
+        if($this->on_sale){
+            $productQuery->where('on_sale', 1);
+        }
+
+        if ($this->price_range){
+            $productQuery->whereBetween('price',[0, $this->price_range]);
         }
 
         return view('livewire.product-page',[
