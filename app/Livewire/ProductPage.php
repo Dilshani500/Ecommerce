@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use App\Models\Product;
-use livewire\WithPagination;
+use Livewire\WithPagination;
 use App\Models\Brand;
 use App\Models\Category;
 use Livewire\Attributes\Url;
@@ -44,6 +44,11 @@ class ProductPage extends Component
 
     public $price_range = 300000;
 
+
+     #[Url]
+
+     public $sort = 'latest';
+
     public function render()
     {
         $productQuery = Product::query()->where('is_active',1);
@@ -67,6 +72,14 @@ class ProductPage extends Component
 
         if ($this->price_range){
             $productQuery->whereBetween('price',[0, $this->price_range]);
+        }
+        
+        if ($this->sort == 'latest'){
+            $productQuery->latest();
+        }
+
+        if ($this->sort == 'price'){
+            $productQuery->orderBy('price');
         }
 
         return view('livewire.product-page',[
