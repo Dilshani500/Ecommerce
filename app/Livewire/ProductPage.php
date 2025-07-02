@@ -9,6 +9,9 @@ use Livewire\WithPagination;
 use App\Models\Brand;
 use App\Models\Category;
 use Livewire\Attributes\Url;
+use App\Helpers\CartManagement;
+use App\Livewire\Partials\Navbar;
+
 
 
 
@@ -48,6 +51,12 @@ class ProductPage extends Component
      #[Url]
 
      public $sort = 'latest';
+
+     //add product to cart method
+     public function addToCart($product_id){
+        $total_count = CartManagement::addItemToCart($product_id);
+        $this->dispatch('update-cart-count',total_count: $total_count)->to(Navbar::class);
+     }
 
     public function render()
     {
