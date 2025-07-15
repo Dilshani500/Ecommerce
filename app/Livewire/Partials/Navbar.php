@@ -7,6 +7,7 @@ namespace App\Livewire\Partials;
 use Livewire\Component;
 use App\Helpers\CartManagement;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
 class Navbar extends Component
 {
@@ -15,6 +16,7 @@ class Navbar extends Component
     public function  mount(){
         $this->total_count = count(CartManagement::getCartItemsFromCookie());
     }
+
 
     #[On('update-cart-count')]
     public function updateCartCount($total_count){

@@ -15,5 +15,18 @@
         </main>
         @livewire('partials.footer')
         @livewireScripts
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                Livewire.on('alert', ({ title, text, icon }) => {
+                    Swal.fire({
+                        title: title,
+                        text: text,
+                        icon: icon
+                    });
+                });
+            });
+        </script>
+
     </body>
 </html>

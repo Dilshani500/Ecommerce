@@ -13,15 +13,12 @@ use App\Helpers\CartManagement;
 use App\Livewire\Partials\Navbar;
 
 
-
-
-
-
-
 #[Title('Products - Ecommerce')]
 
 class ProductPage extends Component
 {
+    
+    
     use WithPagination;
 
 
@@ -55,8 +52,17 @@ class ProductPage extends Component
      //add product to cart method
      public function addToCart($product_id){
         $total_count = CartManagement::addItemToCart($product_id);
+
         $this->dispatch('update-cart-count',total_count: $total_count)->to(Navbar::class);
-     }
+
+        $this->dispatch('alert', [
+            'title' => 'Success!',
+            'text' => 'Product added to the cart successfully!',
+            'position' => 'bottom-end',
+            'timer' => 3000,
+            'toast' => true
+        ]);     
+            }
 
     public function render()
     {
